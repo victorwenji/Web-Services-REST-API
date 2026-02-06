@@ -1,14 +1,16 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { CreateTaskDTO } from '../models/create-task.dto';
 import { UpdateTaskDTO } from '../models/update -task.dto';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { title } from 'process';
 
 @ApiTags('Endpoint related to task')
-//@ApiSecurity('ACCESS_TOKEN')
+@ApiSecurity('ACCESS_TOKEN')
 @Controller('task')
 export class TaskController {
     @Get()
+    @ApiOperation({ summary: 'Récupérer la liste des tâches' })
+    //@ApiResponse({ status: 200, description: 'Liste des tâches' })
     @HttpCode(200)
     alltask() {
         return [
@@ -34,6 +36,10 @@ export class TaskController {
     }
 
     @Get(':title')
+    @ApiOperation({ summary: 'Récupérer une tâche par son titre' })
+    @ApiParam({ name: 'title', type: String })
+    @ApiResponse({ status: 200, description: 'Tâche trouvée' })
+    @ApiResponse({ status: 404, description: 'Tâche non trouvée' })
     @HttpCode(200)
     onetaskByTitle(@Param('title') title: string)
     {
@@ -45,13 +51,18 @@ export class TaskController {
     }
 
     @Post()
+    @ApiOperation({ summary: 'Créer une nouvelle tâche' })
+    @ApiBody({ type: CreateTaskDTO })
     @HttpCode(201)
     newtask(@Body() taskData:CreateTaskDTO)
     {
         return taskData;
     }
 
-    @Patch()
+    @Patch(':id')
+    @ApiOperation({ summary: 'Modifier partiellement une tâche' })
+    @ApiParam({ name: 'id', type: Number })
+    @ApiBody({ type: UpdateTaskDTO, required: false })
     @HttpCode(204)
     updatetask(@Param('id') id: string,@Body() newData:UpdateTaskDTO)
     {
@@ -59,6 +70,9 @@ export class TaskController {
     }
 
     @Delete(':id')
+     @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiOperation({ summary: 'Supprimer une tâche par son ID' })
+    @ApiParam({ name: 'id', type: Number })
     @HttpCode(204)
     deleteOnetask(@Param('id') id: string) {
         return `task with id ${id} deleted !`;
