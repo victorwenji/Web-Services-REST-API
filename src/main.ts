@@ -23,6 +23,6 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
 
-  await app.listen(process.env.PORT as unknown as number);
+  await app.listen(process.env.PORT as unknown as number); 
 }
 bootstrap();
