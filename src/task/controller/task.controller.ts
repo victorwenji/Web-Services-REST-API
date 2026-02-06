@@ -4,8 +4,8 @@ import { UpdateTaskDTO } from '../models/update -task.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { title } from 'process';
 
-//@ApiTags('Endpoint related to users')
-//@ApiSecurity('API_AUTH_TOKEN')
+@ApiTags('Endpoint related to task')
+//@ApiSecurity('ACCESS_TOKEN')
 @Controller('task')
 export class TaskController {
     @Get()
